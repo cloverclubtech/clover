@@ -28,7 +28,8 @@ def get_tree_distribution(clients, max_level, percentages):
                     {
                         'source_id': client['id'],
                         'destiny_id': 0,
-                        'amount': comission_parent
+                        'amount': comission_parent,
+                        'raw_amount': not_rounded_value
                     }
                 )
             else:
@@ -36,7 +37,8 @@ def get_tree_distribution(clients, max_level, percentages):
                     {
                         'source_id': client['id'],
                         'destiny_id': parents[i]['parent_id'],
-                        'amount': comission_parent
+                        'amount': comission_parent,
+                        'raw_amount': not_rounded_value
                     }
                 )
             i += 1
