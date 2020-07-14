@@ -4,22 +4,24 @@
 class GetWinners:
     """Get Winners."""
 
-    def removeDuplicateWinners(self, list):
+    def removeDuplicateWinners(self, list_winners):
         """Remove duplicate winners."""
-        reply_winners = list[:]
+        reply_winners = list_winners[:]
         for reply_winner in reply_winners:
             num_repeated = 0
-            for winner in list:
+            for winner in list_winners:
                 if winner['user_id'] == reply_winner['user_id']:
                     num_repeated += 1
                     if num_repeated > 1:
                         if winner['value_difference'] <= reply_winner['value_difference']:
-                            list.remove(reply_winner)
-                            break
+                            if reply_winner in list_winners:
+                                list_winners.remove(reply_winner)
+                                break
                         else:
-                            list.remove(winner)
-                            break
-        return list
+                            if winner in list_winners:
+                                list_winners.remove(winner)
+                                break
+        return list_winners
 
     def chooseWinners(self, bets, final_value, range):
         """choose winners"""
