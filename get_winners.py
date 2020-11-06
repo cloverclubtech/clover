@@ -26,40 +26,35 @@ class GetWinners:
     def chooseWinners(self, bets, final_value, range):
         """choose winners"""
         winners = []
+        closest_final_value = []
+        validated_winners = []
+        aux_winners = []
+        validated_winners.append(final_value)
         for bet in bets:
-            if final_value == bet['bet_value']:
+            if bet['bet_value'] >= final_value - range and bet['bet_value'] <= final_value + range:
+                bet['value_difference'] = abs(final_value - bet['bet_value'])
                 winners.append(bet)
 
-        if len(winners) == 0:
-            validated_winners = []
-            aux_winners = []
-            validated_winners.append(final_value)
-            for bet in bets:
-                if bet['bet_value'] >= final_value - range and bet['bet_value'] <= final_value + range:
-                    bet['value_difference'] = abs(final_value - bet['bet_value'])
-                    winners.append(bet)
+        for winner in winners:
+            if validated_winners[-1] == winner['value_difference']:
+                validated_winners.append(winner['value_difference'])
+                aux_winners.append(winner)
+            elif winner['value_difference'] < validated_winners[-1]:
+                validated_winners = []
+                aux_winners = []
+                validated_winners.append(winner['value_difference'])
+                aux_winners.append(winner)
 
-            for winner in winners:
-                if validated_winners[-1] == winner['value_difference']:
-                    validated_winners.append(winner['value_difference'])
-                    aux_winners.append(winner)
-                elif winner['value_difference'] < validated_winners[-1]:
-                    validated_winners = []
-                    aux_winners = []
-                    validated_winners.append(winner['value_difference'])
-                    aux_winners.append(winner)
+        winners = self.removeDuplicateWinners(aux_winners)
 
-            winners = self.removeDuplicateWinners(aux_winners)
-            closest_final_value = self.closestFinalValue(bets, winners, final_value, range)
-
-            result = {
-                'winners': winners,
-                'closest_final_value': closest_final_value,
-            }
-
+        closest_final_value = self.closestFinalValue(bets, winners, final_value)
+        result = {
+            'winners': winners,
+            'closest_final_value': closest_final_value,
+        }
         return result
 
-    def closestFinalValue(self, bets, list_winners, final_value, range):
+    def closestFinalValue(self, bets, list_winners, final_value):
         """closest final value"""
         winners = []
         list_aux = []
